@@ -1,10 +1,10 @@
 <template>
   <router-view/>
-  <main-tab-bar/>
+  <main-tab-bar class="main-tab-bar" />
 </template>
 
 <script>
-  import MainTabBar from "./components/content/MainTabBar";
+  import MainTabBar from "./components/content/mainTabbar/MainTabBar";
 
   export default {
     name: 'App',
@@ -17,4 +17,8 @@
 
 <style>
   @import "~@/assets/css/base.css";
+
+  .main-tab-bar{
+    z-index: 10;
+  }
 </style>
