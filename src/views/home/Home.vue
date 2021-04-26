@@ -10,12 +10,18 @@
               :pull-up-load="true"
               @pullingUp="loadMore"
       >
+          <!--轮播图-->
           <home-swiper :banners="banners" ></home-swiper>
+          <!--推荐-->
           <recommend-view :recommend="recommends"></recommend-view>
+          <!--一张图片-->
           <feature-view/>
+          <!--流行综合版块-->
           <tab-control :titles="['流行', '新款', '精选']" @tabClick="tabClick" class="tab-control"></tab-control>
+          <!--商品-->
           <goods-list :goods="showGoods" />
       </scroll>
+      <!--返回顶部-->
       <back-top @click="backClick" v-show="isShowBackTop" />
   </div>
 </template>
@@ -168,6 +174,8 @@ export default {
 
                 //重构高度
                 this.$refs.scroll.refresh()
+
+                console.log(this.$refs.scroll.scroll);
 
             }).catch(err => {
                 console.log(err);

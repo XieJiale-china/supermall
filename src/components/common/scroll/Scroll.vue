@@ -13,11 +13,14 @@
 
   export default {
     name: "Scroll",
+    //props里面都是一些功能是否开启的属性，调用组件时传递参数开启功能
     props:{
+      //是否监听滚动
       probeType:{
         type: Number,
         default:0,
       },
+      //是否开启上拉监听
       pullUpLoad: {
         type: Boolean,
         default: false
@@ -35,6 +38,9 @@
       this.scroll = new BScroll('.wrapper', {
         //按需加载，加了这个才能手动滚
         observeDOM: true,
+        // 开启 observe-image 插件,加载图片后重新计算页面高度，避免高度太小带来的卡顿
+        observeImage: true,
+
 
         //【1.侦测实时位置】
         //0,1都是不检测
