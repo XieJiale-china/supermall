@@ -175,8 +175,6 @@ export default {
                 //重构高度
                 this.$refs.scroll.refresh()
 
-                console.log(this.$refs.scroll.scroll);
-
             }).catch(err => {
                 console.log(err);
             })

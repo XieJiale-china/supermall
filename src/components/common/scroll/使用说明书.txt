@@ -1,0 +1,16 @@
+引入scroll后，调用规则
+
+ref 为了方便拿到跳转指定位置的方法
+
+probe-type 开启滚动监听
+scroll 发送实时滚动位置
+
+pull-up-load 开启上拉加载
+pullingUp 触发上拉加载执行的方法
+
+<scroll class="content" ref="scroll"
+              :probe-type="3"
+              @scroll="contentScroll"
+              :pull-up-load="true"
+              @pullingUp="loadMore"
+      >
