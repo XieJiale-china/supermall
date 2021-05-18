@@ -43,13 +43,13 @@
 <script>
 //【公共组件】
 //最上面的购物街
-import NavBar from "../../components/common/navbar/NavBar";
+import NavBar from "components/common/navbar/NavBar";
 //标签控制 也就是综合销量这些
-import TabControl from "../../components/content/tabControl/TabControl";
+import TabControl from "components/content/tabControl/TabControl";
 //商品数据
-import GoodsList from "../../components/content/goods/GoodsList";
+import GoodsList from "components/content/goods/GoodsList";
 //滚动插件
-import Scroll from "../../components/common/scroll/Scroll";
+import Scroll from "components/common/scroll/Scroll";
 
 //【网络请求】
 import {getHomeMultidata, getHomeGoods} from "../../network/home";
