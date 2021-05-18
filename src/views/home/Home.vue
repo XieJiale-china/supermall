@@ -129,23 +129,23 @@ export default {
     },
     //生命周期函数
     mounted() {
-        console.log('home组件挂载dom');
+        // console.log('home组件挂载dom');
     },
     //路由活跃状态刷下高度
     activated(){
         this.$refs.scroll.refresh();
-        console.log('选中home');
+        // console.log('选中home');
         this.$refs.scroll.scrollTo(0, this.saveY, 0);
 
     },
     //路由不活跃
     deactivated() {
         this.saveY = this.$refs.scroll.getScrollY();
-        console.log(this.saveY);
+        // console.log(this.saveY);
     },
     //组件销毁时调用
     destroyed() {
-        console.log('home组件销毁');
+        // console.log('home组件销毁');
     },
     methods: {
         /**
