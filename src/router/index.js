@@ -9,12 +9,17 @@ const routes = [
   {
     path: '/home',
     name: 'Home',
-    component: Home
+    component: Home,
+    //里面的数据可以自定义，方便外面拿取
+    meta: {
+      //弄一个这个，判断路由是否缓存
+      keepAlive: true,
+    },
   },
   {
     path: '/category',
     name: 'Category',
-    component: () => import('../views/category/Category.vue')
+    component: () => import('../views/category/Category.vue'),
   },
   {
     path: '/cart',
@@ -25,6 +30,11 @@ const routes = [
     path: '/profile',
     name: 'Profile',
     component: () => import('../views/profile/Profile.vue')
+  },
+  {
+    path: '/detail/:iid',
+    name: 'Detail',
+    component: () => import('../views/detail/Detail.vue')
   },
 ]
 

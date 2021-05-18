@@ -1,23 +1,37 @@
 <template>
+
   <div id="home">
       <nav-bar class="home-nav">
           <template #center >购物街</template>
       </nav-bar>
 
+      <!--流行综合版块，解决无法吸顶问题-->
+      <tab-control :titles="['流行', '新款', '精选']"
+                   @tabClick="tabClick"
+                   ref="tabControl1"
+                   class="tabControl"
+                    v-show="isTabFixed"
+      ></tab-control>
+      <!--滚动-->
       <scroll class="content" ref="scroll"
-              :probe-type="3"
+              :probe-type="2"
               @scroll="contentScroll"
               :pull-up-load="true"
               @pullingUp="loadMore"
       >
+
           <!--轮播图-->
-          <home-swiper :banners="banners" ></home-swiper>
+          <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad" ></home-swiper>
           <!--推荐-->
           <recommend-view :recommend="recommends"></recommend-view>
           <!--一张图片-->
           <feature-view/>
           <!--流行综合版块-->
-          <tab-control :titles="['流行', '新款', '精选']" @tabClick="tabClick" class="tab-control"></tab-control>
+          <tab-control :titles="['流行', '新款', '精选']"
+                       @tabClick="tabClick"
+                       ref="tabControl2"
+                       v-show="!isTabFixed"
+                        ></tab-control>
           <!--商品-->
           <goods-list :goods="showGoods" />
       </scroll>
@@ -50,8 +64,19 @@ import FeatureView from "./chlidComps/FeatureView";
 //回到顶部小图片
 import BackTop from "../../components/content/backTop/BackTop";
 
+import {onMounted, onUnmounted} from 'vue'
+
 export default {
     name: 'Home',
+    setup() {
+        // mounted
+        onMounted(() => {
+            console.log('Component is mounted!')
+        })
+        onUnmounted(()=>{
+            console.log('home组件被摧毁!')
+        })
+    },
     data(){
       return {
           //把请求的数据存起来
@@ -66,7 +91,13 @@ export default {
           //当前显示流行精选属性
           currentType: 'pop',
           //回到顶部按钮是否显示
-          isShowBackTop: false
+          isShowBackTop: false,
+          //吸顶和顶部的距离
+          tabOffsetTop: 0,
+          //是否吸顶
+          isTabFixed: false,
+          //记住滚动的位置，方便返回时定位到指定位置
+          saveY: 0,
       }
     },
     components: {
@@ -95,7 +126,26 @@ export default {
         this.getHomeGoods('pop')
         this.getHomeGoods('new')
         this.getHomeGoods('sell')
+    },
+    //生命周期函数
+    mounted() {
+        console.log('home组件挂载dom');
+    },
+    //路由活跃状态刷下高度
+    activated(){
+        this.$refs.scroll.refresh();
+        console.log('选中home');
+        this.$refs.scroll.scrollTo(0, this.saveY, 0);
 
+    },
+    //路由不活跃
+    deactivated() {
+        this.saveY = this.$refs.scroll.getScrollY();
+        console.log(this.saveY);
+    },
+    //组件销毁时调用
+    destroyed() {
+        console.log('home组件销毁');
     },
     methods: {
         /**
@@ -117,6 +167,11 @@ export default {
                     this.currentType = 'sell'
                     break
             }
+            this.$refs.tabControl1.currentIndex = index
+            this.$refs.tabControl2.currentIndex = index
+
+            this.$refs.scroll.scrollTo(0, -this.tabOffsetTop);
+            console.log('ddd');
         },
 
         //返回顶部
@@ -128,19 +183,26 @@ export default {
             * 参数二：y轴
             * 参数三：跳转到位置的延迟时间,默认300
             */
-            this.$refs.scroll.scrollTo(0,0,500);
+            this.$refs.scroll.scrollTo && this.$refs.scroll.scrollTo(0,0,500);
         },
 
         //监听滑动的位置，控制回到顶部是否显示
         contentScroll(position){
-            //console.log(position);
-            return this.isShowBackTop = position.y < -1000
+            // console.log(position);
+            this.isShowBackTop = position.y < -1000
+            this.isTabFixed = position.y < -this.tabOffsetTop
         },
 
         //上拉加载更多
         loadMore(){
             //console.log('上拉了');
             this.getHomeGoods(this.currentType)
+        },
+
+        //监听轮播图加载，计算吸顶与顶部的距离
+        swiperImageLoad(){
+            //console.log(this.$refs.tabControl2.$el.offsetTop);
+            this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop
         },
 
 
@@ -186,8 +248,7 @@ export default {
 <style scoped>
     #home{
         height: 100vh;
-        padding-top: 44px;
-        padding-bottom: 48px;
+        position: relative;
     }
     .home-nav{
         /*这里使用之前base设置的变量*/
@@ -195,20 +256,24 @@ export default {
         color: white;
         font-size: 18px;
 
-        position: fixed;
-        left: 0;
-        right: 0;
-        top: 0;
-        z-index: 9;
-    }
-    .tab-control {
-        position: sticky;
-        top: 44px;
-        z-index: 9;
+        /*position: fixed;*/
+        /*left: 0;*/
+        /*right: 0;*/
+        /*top: 0;*/
+        /*z-index: 9;*/
     }
     .content{
-        /*height: 350px;*/
-        height: 100%;
         overflow: hidden;
+
+        position: absolute;
+        top: 44px;
+        bottom: 49px;
+        left: 0;
+        right: 0;
+    }
+    .tabControl{
+        position: relative;
+        z-index: 9999;
+        background: white;
     }
 </style>

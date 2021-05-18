@@ -9,7 +9,8 @@
 <script>
   //引入第三方滚动
   import BScroll from 'better-scroll'
-
+  //引入防抖函数，对滑动监听进行限制
+  import {debounce} from '@/common/utils'
 
   export default {
     name: "Scroll",
@@ -57,18 +58,33 @@
 
       })
 
-      //实时监听位置
-      this.scroll.on('scroll',(position)=>{
-        //console.log(position);
-        // 把数据抛给父组件
-        this.$emit('scroll', position)
-      })
+      //判断probeType有值才开始监听
+      if(this.probeType === 2 || this.probeType === 3) {
+        const refresh = debounce(this.$emit, 200)
+        //实时监听位置
+        this.scroll.on('scroll',(position)=>{
+          //console.log(position);
+          // 把数据抛给父组件
 
-      //上拉加载更多
-      this.scroll.on('pullingUp',()=>{
-        //直接执行
-        this.$emit('pullingUp')
-      })
+          //开启防抖
+          // refresh('scroll', position)
+
+          //不用防抖
+          this.$emit('scroll', position)
+        })
+
+      }
+
+
+      //上拉加载更多,if判断有开启才监听
+      if(this.pullUpLoad){
+        this.scroll.on('pullingUp',()=>{
+          //直接执行
+          this.$emit('pullingUp')
+        })
+      }
+
+
     },
     methods:{
       //跳转到指定位置，time设置默认跳转延迟
@@ -81,14 +97,21 @@
         */
         this.scroll.scrollTo(x, y, time)
       },
+
       //封装一下finishPullUp方法，刷新上拉加载
       finishPullUp(){
         this.scroll.finishPullUp()
       },
+
       //重构下高度
       refresh(){
         this.scroll.refresh()
-      }
+      },
+
+      //获取滚动的位置Y,方便记住滚动位置，返回时可以用
+      getScrollY(){
+        return this.scroll ? this.scroll.y : 0
+      },
 
     }
   }

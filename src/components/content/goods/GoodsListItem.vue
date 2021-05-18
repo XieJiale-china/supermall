@@ -1,6 +1,7 @@
 <template>
-  <div class="goods-item">
-    <img :src="goodsItem.show.img" alt="">
+  <div class="goods-item" @click="itemClick(goodsItem.iid)">
+<!--    v-lazy使用图片懒加载-->
+    <img  v-lazy="{src:showImage, loading:'images/placeholder.png'}" alt="">
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
       <span class="price">{{goodsItem.price}}</span>
@@ -19,7 +20,21 @@
           return {}
         }
       }
-    }
+    },
+    //计算属性
+    computed: {
+      //goodsItem.show.img的图片存放位置不一样，这里用计算属性改一下
+      showImage() {
+        //判断this.goodsItem.image在就赋值，不在就赋值后面的
+        return this.goodsItem.image || this.goodsItem.show.img
+      },
+    },
+    methods:{
+      itemClick(iid){
+        console.log(iid);
+        this.$router.push('/detail/'+iid)
+      },
+    },
   }
 </script>
 
